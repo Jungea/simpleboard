@@ -1,0 +1,8 @@
+### 게시글 작성 요청
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "title": "심플보드 첫 글",
+  "content": "이건 심플보드의 시작입니다!"
+}
