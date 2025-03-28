@@ -6,3 +6,8 @@ Content-Type: application/json
   "title": "심플보드 첫 글",
   "content": "이건 심플보드의 시작입니다!"
 }
+
+### 게시글 단건 조회
+GET http://localhost:8080/api/posts/112
+
+Accept: application/json

@@ -1,6 +1,7 @@
 package kr.kro.simpleboard.post.application;
 
 import kr.kro.simpleboard.post.domain.Post;
+import kr.kro.simpleboard.post.exception.PostNotFoundException;
 import kr.kro.simpleboard.post.infrastructure.PostRepository;
 import kr.kro.simpleboard.post.presentation.dto.PostCreateRequest;
 import kr.kro.simpleboard.post.presentation.dto.PostResponse;
@@ -30,6 +31,21 @@ public class PostServiceImpl implements PostService {
             saved.getViews(),
             saved.getLikes(),
             saved.getCreatedAt()
+        );
+    }
+
+    @Override
+    public PostResponse findById(Long id) {
+        Post post = postRepository.findById(id)
+            .orElseThrow(() -> new PostNotFoundException(id));
+
+        return new PostResponse(
+            post.getId(),
+            post.getTitle(),
+            post.getContent(),
+            post.getViews(),
+            post.getLikes(),
+            post.getCreatedAt()
         );
     }
 }
