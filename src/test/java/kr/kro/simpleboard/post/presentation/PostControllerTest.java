@@ -65,6 +65,32 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.content").value("내용"));
     }
 
+    @DisplayName("게시글 등록 실패 - 비어있음")
+    @Test
+    void createPost_withBlank_shouldReturnBadRequest() throws Exception {
+        // given
+        PostCreateRequest request = new PostCreateRequest("", "내용 있음");
+
+        // when & then
+        mockMvc.perform(post("/api/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.message").exists()); // 메시지는 메시지 바디에 따라 조절
+
+        // given
+        PostCreateRequest request2 = new PostCreateRequest("제목 있음", "");
+
+        // when & then
+        mockMvc.perform(post("/api/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request2)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.message").exists()); // 메시지는 메시지 바디에 따라 조절
+    }
+
     @DisplayName("게시글 단건 조회 성공")
     @Test
     void getPostById() throws Exception {

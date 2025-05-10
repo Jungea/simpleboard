@@ -29,6 +29,7 @@ dependencies {
 
 	// 🌱 Spring Boot 기본
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	// 🔐 Spring Security 관련 (JWT 사용 예정이면 추가 필요)

@@ -7,6 +7,15 @@ Content-Type: application/json
   "content": "이건 심플보드의 시작입니다!"
 }
 
+### 게시글 등록 실패 - 비어있음
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "title": "",
+  "content": "이건 심플보드의 시작입니다!"
+}
+
 ### 게시글 단건 조회
 GET http://localhost:8080/api/posts/112
 
