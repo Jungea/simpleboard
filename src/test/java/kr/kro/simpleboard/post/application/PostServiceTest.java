@@ -1,13 +1,17 @@
 package kr.kro.simpleboard.post.application;
 
 import kr.kro.simpleboard.post.domain.Post;
+import kr.kro.simpleboard.post.exception.PostNotFoundException;
 import kr.kro.simpleboard.post.infrastructure.PostRepository;
 import kr.kro.simpleboard.post.presentation.dto.PostCreateRequest;
 import kr.kro.simpleboard.post.presentation.dto.PostResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -42,5 +46,40 @@ class PostServiceTest {
         assertThat(response.likes()).isEqualTo(savedPost.getLikes());
 
         verify(postRepository, times(1)).save(any(Post.class));
+    }
+
+    @DisplayName("게시글 조회 성공")
+    @Test
+    void findById() {
+        // given
+        Long postId = 1L;
+        Post post = Post.builder()
+                .id(postId)
+                .title("테스트 제목")
+                .content("테스트 내용")
+                .views(0)
+                .likes(0)
+                .build();
+
+        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
+
+        // when
+        PostResponse response = postService.findById(postId);
+
+        // then
+        assertThat(response.id()).isEqualTo(postId);
+    }
+
+    @DisplayName("게시글 조회 실패 - 존재하지 않음")
+    @Test
+    void findById_fail() {
+        // given
+        Long postId = 999L;
+        when(postRepository.findById(postId)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> postService.findById(postId))
+                .isInstanceOf(PostNotFoundException.class)
+                .hasMessageContaining("존재하지 않는 게시글");
     }
 }
