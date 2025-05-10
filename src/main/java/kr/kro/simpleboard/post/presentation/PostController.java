@@ -1,10 +1,13 @@
 package kr.kro.simpleboard.post.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kr.kro.simpleboard.global.exception.ErrorResponse;
 import kr.kro.simpleboard.post.application.PostService;
 import kr.kro.simpleboard.post.presentation.dto.PostCreateRequest;
 import kr.kro.simpleboard.post.presentation.dto.PostResponse;
@@ -35,8 +38,10 @@ public class PostController {
 
     @Operation(summary = "게시글 단건 조회", description = "ID로 게시글을 조회합니다.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글 ID")
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공",
+                    content = @Content(schema = @Schema(implementation = PostResponse.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글 ID",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPostById(@PathVariable Long id) {
