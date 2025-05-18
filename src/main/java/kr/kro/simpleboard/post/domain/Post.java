@@ -37,4 +37,8 @@ public class Post extends BaseAuditableEntity {
     @Column(nullable = false)
     private int likes = 0;
 
+    // 조회수 증가
+    public void increaseViews() {
+        this.views++;
+    }
 }

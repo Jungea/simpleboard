@@ -7,6 +7,7 @@ import kr.kro.simpleboard.post.presentation.dto.PostCreateRequest;
 import kr.kro.simpleboard.post.presentation.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,9 +36,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public PostResponse findById(Long id) {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new PostNotFoundException(id));
+
+        post.increaseViews();
+        postRepository.save(post);
 
         return new PostResponse(
             post.getId(),

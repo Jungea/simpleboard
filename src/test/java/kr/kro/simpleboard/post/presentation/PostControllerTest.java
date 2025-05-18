@@ -93,16 +93,11 @@ class PostControllerTest {
 
     @DisplayName("게시글 단건 조회 성공")
     @Test
-    void getPostById() throws Exception {
+    void getPostById_success() throws Exception {
         // given
         Long postId = 1L;
         PostResponse response = new PostResponse(
-                postId,
-                "테스트 제목",
-                "테스트 내용",
-                10,
-                5,
-                LocalDateTime.now()
+                postId, "제목", "내용", 1, 0, LocalDateTime.now()
         );
 
         given(postService.findById(postId)).willReturn(response);
@@ -111,8 +106,8 @@ class PostControllerTest {
         mockMvc.perform(get("/api/posts/{id}", postId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(postId))
-                .andExpect(jsonPath("$.title").value("테스트 제목"))
-                .andExpect(jsonPath("$.content").value("테스트 내용"));
+                .andExpect(jsonPath("$.title").value("제목"))
+                .andExpect(jsonPath("$.views").value(1));
     }
 
     @DisplayName("게시글 단건 조회 실패 - 존재하지 않는 ID")

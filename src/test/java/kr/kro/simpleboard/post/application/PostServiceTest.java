@@ -13,6 +13,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 class PostServiceTest {
@@ -48,9 +49,9 @@ class PostServiceTest {
         verify(postRepository, times(1)).save(any(Post.class));
     }
 
-    @DisplayName("게시글 조회 성공")
+    @DisplayName("게시글 단건 조회 - 조회수 증가 포함")
     @Test
-    void findById() {
+    void findById_increaseViewsAndReturnPost() {
         // given
         Long postId = 1L;
         Post post = Post.builder()
@@ -61,13 +62,17 @@ class PostServiceTest {
                 .likes(0)
                 .build();
 
-        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
+        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(postRepository.save(any(Post.class))).willReturn(post);
 
         // when
         PostResponse response = postService.findById(postId);
 
         // then
         assertThat(response.id()).isEqualTo(postId);
+        assertThat(response.title()).isEqualTo("테스트 제목");
+        assertThat(response.views()).isEqualTo(1); // ✅ 조회수 1 증가 확인
+        verify(postRepository).save(any(Post.class)); // 저장 호출 확인
     }
 
     @DisplayName("게시글 조회 실패 - 존재하지 않음")
