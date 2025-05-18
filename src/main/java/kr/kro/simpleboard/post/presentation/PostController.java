@@ -33,9 +33,11 @@ public class PostController {
     @Operation(summary = "게시글 등록", description = "새로운 게시글을 등록합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "게시글 등록 성공",
+                    content = @Content(schema = @Schema(implementation = PostCreateRequest.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = PostResponse.class),
+                            schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "ValidationError",
                                     summary = "입력값 오류 예시",
@@ -47,8 +49,6 @@ public class PostController {
                                                 }
                                             """
                             ))),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
     public ResponseEntity<PostResponse> createPost(@RequestBody @Valid PostCreateRequest request) {
